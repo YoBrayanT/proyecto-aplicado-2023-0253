@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Establecimiento | CabañasYa</title><meta name="description" content="Ficha del establecimiento en CabañasYa.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css"></head><body>
+<header class="top"><div class="cont"><a href="index.html" aria-label="CabañasYa, inicio"><img src="../Imágenes/logo-cabanasya.png" alt="CabañasYa"></a>
+<button id="menuBtn" aria-expanded="false" aria-controls="nav">Menú</button><nav id="nav" aria-label="Principal"><a href="index.html">Inicio</a><a href="explorar.html" aria-current="page">Explorar</a><a href="explorar.html?tipo=Cabaña">Cabañas</a><a href="explorar.html?tipo=Hotel">Hoteles</a><a href="index.html#como-funciona">Cómo funciona</a><a href="registrar.html" class="reg">Registrar mi establecimiento</a></nav></div></header>
+<main><section><div class="cont" id="ficha"></div></section></main>
+<footer><div class="cont"><p><b>CabañasYa</b> · Tu lugar ideal, a solo un clic.</p>
+<p>La información de cada establecimiento la proporciona su propietario. Confirma tarifas y disponibilidad directamente con el alojamiento.</p></div></footer>
+<script src="datos.js"></script><script src="app.js"></script><script>
+const id=new URLSearchParams(location.search).get("id");
+const e=ESTABLECIMIENTOS.find(x=>x.id===id);
+const v=(x)=>x?esc(x):'<span class="pend">Pendiente</span>';
+if(!e){$("#ficha").innerHTML='<div class="vacio">No encontramos este establecimiento. <a href="explorar.html">Volver al directorio</a></div>'}
+else{
+ document.title=e.nombre+" | CabañasYa";
+ const tel=enlaceTel(e.telefono),wa=enlaceWA(e.whatsapp,e.nombre);
+ const a=(href,txt,sec,ext)=>href?`<a class="btn ${sec?"sec":""}" href="${href}" ${ext?'target="_blank" rel="noopener"':""}>${txt}</a>`:`<span class="btn" aria-disabled="true">${txt} (pendiente)</span>`;
+ const mapa=e.mapa||(e.direccion?"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(e.nombre+" "+lugar(e)):"");
+ $("#ficha").innerHTML=`<p><a href="explorar.html">← Volver al directorio</a></p>
+ <h2>${esc(e.nombre)}</h2><p class="sub">${esc(e.tipo)} · ${lugar(e)?esc(lugar(e)):"Ubicación pendiente"}</p>
+ <div class="ficha"><div>
+  <div class="galeria"><div class="foto">${e.foto?`<img src="${esc(e.foto)}" alt="Fotografía principal de ${esc(e.nombre)}">`:"Foto principal pendiente"}</div><div class="foto">Foto pendiente</div><div class="foto">Foto pendiente</div><div class="foto">Foto pendiente</div></div>
+  <div class="panel" style="margin-top:20px"><h3>Descripción</h3><p>${v(e.descripcion)}</p></div>
+  <div class="panel" style="margin-top:20px"><h3>Servicios</h3><p>${e.servicios.length?e.servicios.map(esc).join(" · "):'<span class="pend">Pendiente</span>'}</p></div>
+  <div class="panel" style="margin-top:20px"><h3>Tarifas</h3>${e.tarifas.length?e.tarifas.map(t=>`<div class="fila"><span>${esc(t.modalidad)}</span><b>RD$ ${t.precio.toLocaleString("es-DO")}</b></div>`).join(""):'<p class="pend">Las tarifas aún no han sido publicadas. Consúltalas directamente con el establecimiento.</p>'}</div>
+ </div><aside>
+  <div class="panel acciones"><h3>Contacto</h3>
+   ${a(tel,"Llamar ahora",false)}${a(wa,"Escribir por WhatsApp",true,true)}${a(mapa,"Cómo llegar",true,true)}
+   <div class="fila"><span>Teléfono</span><b>${v(e.telefono)}</b></div>
+   <div class="fila"><span>WhatsApp</span><b>${v(e.whatsapp)}</b></div>
+   <div class="fila"><span>Horario</span><b>${v(e.horario)}</b></div>
+   <div class="fila"><span>Dirección</span><b>${v(e.direccion)}</b></div>
+   <button class="btn sec" data-fav="${e.id}" id="favBtn"></button></div></aside></div>`;
+ window.refrescar=()=>{$("#favBtn").textContent=favs().includes(e.id)?"♥ Guardado en favoritos":"♡ Guardar en favoritos"};refrescar();
+}
+</script></body></html>

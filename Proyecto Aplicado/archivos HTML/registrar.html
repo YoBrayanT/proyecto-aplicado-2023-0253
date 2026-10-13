@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registrar mi establecimiento | CabañasYa</title><meta name="description" content="Solicita publicar tu cabaña, hotel o motel en CabañasYa.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css"></head><body>
+<header class="top"><div class="cont"><a href="index.html" aria-label="CabañasYa, inicio"><img src="../Imágenes/logo-cabanasya.png" alt="CabañasYa"></a>
+<button id="menuBtn" aria-expanded="false" aria-controls="nav">Menú</button><nav id="nav" aria-label="Principal"><a href="index.html">Inicio</a><a href="explorar.html">Explorar</a><a href="explorar.html?tipo=Cabaña">Cabañas</a><a href="explorar.html?tipo=Hotel">Hoteles</a><a href="index.html#como-funciona">Cómo funciona</a><a href="registrar.html" aria-current="page" class="reg">Registrar mi establecimiento</a></nav></div></header>
+<main><section><div class="cont" style="max-width:720px"><h2>Registra tu establecimiento</h2>
+<p class="sub">Envía tus datos y el equipo de CabañasYa los revisará antes de publicar.</p>
+<form id="f" novalidate>
+<div class="campo"><label for="resp">Nombre completo del responsable</label><input id="resp" required autocomplete="name"></div>
+<div class="campo"><label for="nom">Nombre comercial</label><input id="nom" required></div>
+<div class="campo"><label for="tp">Tipo de establecimiento</label><select id="tp"><option>Cabaña</option><option>Hotel</option><option>Motel</option></select></div>
+<div class="campo"><label for="tel">Teléfono de contacto</label><input id="tel" type="tel" required autocomplete="tel"></div>
+<div class="campo"><label for="wa">WhatsApp</label><input id="wa" type="tel"></div>
+<div class="campo"><label for="mail">Correo electrónico</label><input id="mail" type="email" required autocomplete="email"></div>
+<div class="campo"><label for="dir">Provincia, municipio y dirección</label><textarea id="dir" rows="2" required></textarea></div>
+<div class="campo"><label for="des">Descripción, servicios y tarifas</label><textarea id="des" rows="4"></textarea></div>
+<div class="campo"><label><input type="checkbox" id="ok" style="width:auto"> Acepto los términos de uso y la política de privacidad.</label></div>
+<button class="btn" type="submit">Enviar solicitud</button>
+<p class="ok" id="msg" role="status"></p>
+<p class="aviso" style="margin-top:18px">Esta versión guarda la solicitud solo en tu navegador. Para recibirlas en un correo o base de datos hace falta conectar el servidor (siguiente etapa).</p></form></div></section></main>
+<footer><div class="cont"><p><b>CabañasYa</b> · Tu lugar ideal, a solo un clic.</p>
+<p>La información de cada establecimiento la proporciona su propietario. Confirma tarifas y disponibilidad directamente con el alojamiento.</p></div></footer>
+<script src="datos.js"></script><script src="app.js"></script><script>
+$("#f").addEventListener("submit",ev=>{ev.preventDefault();
+ const falta=["resp","nom","tel","mail","dir"].find(i=>!$("#"+i).value.trim());
+ const m=$("#msg");m.style.display="block";
+ if(falta){m.style.background="#FFF1F1";m.style.borderColor="#F5162C";m.textContent="Completa el campo: "+document.querySelector("label[for="+falta+"]").textContent+".";$("#"+falta).focus();return}
+ if(!$("#ok").checked){m.style.background="#FFF1F1";m.style.borderColor="#F5162C";m.textContent="Debes aceptar los términos y la política de privacidad.";return}
+ const s=JSON.parse(localStorage.getItem("cy_solicitudes")||"[]");
+ s.push({codigo:"SOL-"+Date.now().toString(36).toUpperCase(),estado:"Pendiente de revisión",fecha:new Date().toISOString(),nombre:$("#nom").value,tipo:$("#tp").value,telefono:$("#tel").value,correo:$("#mail").value});
+ localStorage.setItem("cy_solicitudes",JSON.stringify(s));
+ m.style.background="";m.style.borderColor="";m.textContent="Solicitud guardada con el estado «Pendiente de revisión». Código: "+s[s.length-1].codigo;$("#f").reset();});
+</script></body></html>

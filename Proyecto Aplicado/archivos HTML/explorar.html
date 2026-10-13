@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Explorar alojamientos | CabañasYa</title><meta name="description" content="Cabañas y hoteles publicados en CabañasYa. Filtra por tipo y ubicación.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css"></head><body>
+<header class="top"><div class="cont"><a href="index.html" aria-label="CabañasYa, inicio"><img src="../Imágenes/logo-cabanasya.png" alt="CabañasYa"></a>
+<button id="menuBtn" aria-expanded="false" aria-controls="nav">Menú</button><nav id="nav" aria-label="Principal"><a href="index.html">Inicio</a><a href="explorar.html" aria-current="page">Explorar</a><a href="explorar.html?tipo=Cabaña">Cabañas</a><a href="explorar.html?tipo=Hotel">Hoteles</a><a href="index.html#como-funciona">Cómo funciona</a><a href="registrar.html" class="reg">Registrar mi establecimiento</a></nav></div></header>
+<main><section><div class="cont"><h2>Explorar alojamientos</h2><p class="sub" id="cuenta"></p>
+<form id="filtros" style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end" onsubmit="return false">
+<div><label for="q">Nombre o ubicación</label><input id="q"></div>
+<div><label for="tipo">Tipo</label><select id="tipo"><option value="">Todos</option><option>Cabaña</option><option>Hotel</option><option>Motel</option></select></div>
+<div><label for="solo">Mostrar</label><select id="solo"><option value="">Todos</option><option value="fav">Solo mis favoritos</option></select></div>
+<button class="btn sec" id="limpiar" type="button">Limpiar filtros</button></form>
+<div class="grid" id="lista"></div></div></section></main>
+<footer><div class="cont"><p><b>CabañasYa</b> · Tu lugar ideal, a solo un clic.</p>
+<p>La información de cada establecimiento la proporciona su propietario. Confirma tarifas y disponibilidad directamente con el alojamiento.</p></div></footer>
+<script src="datos.js"></script><script src="app.js"></script><script>
+const P=new URLSearchParams(location.search);
+$("#q").value=P.get("q")||"";$("#tipo").value=P.get("tipo")||"";
+window.refrescar=()=>{
+ const q=$("#q").value.trim().toLowerCase(),t=$("#tipo").value,s=$("#solo").value,F=favs();
+ const r=ESTABLECIMIENTOS.filter(e=>(!t||e.tipo===t)&&(!s||F.includes(e.id))&&(!q||(e.nombre+" "+lugar(e)).toLowerCase().includes(q)));
+ $("#cuenta").textContent=r.length+(r.length===1?" establecimiento":" establecimientos");
+ pintar("#lista",r,s?"Aún no has guardado favoritos. Pulsa el corazón en cualquier tarjeta.":"No encontramos establecimientos con esos criterios. Prueba limpiar los filtros.");
+};
+["q","tipo","solo"].forEach(i=>$("#"+i).addEventListener("input",refrescar));
+$("#limpiar").onclick=()=>{$("#q").value="";$("#tipo").value="";$("#solo").value="";refrescar()};
+refrescar();
+</script></body></html>

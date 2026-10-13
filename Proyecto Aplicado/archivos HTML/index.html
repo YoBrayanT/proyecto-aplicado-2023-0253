@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CabañasYa | Cabañas y hoteles en República Dominicana</title><meta name="description" content="Explora cabañas, hoteles y alojamientos. Consulta fotos, servicios, tarifas, ubicación y contacto en CabañasYa.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css"></head><body>
+<header class="top"><div class="cont"><a href="index.html" aria-label="CabañasYa, inicio"><img src="../Imágenes/logo-cabanasya.png" alt="CabañasYa"></a>
+<button id="menuBtn" aria-expanded="false" aria-controls="nav">Menú</button><nav id="nav" aria-label="Principal"><a href="index.html" aria-current="page">Inicio</a><a href="explorar.html">Explorar</a><a href="explorar.html?tipo=Cabaña">Cabañas</a><a href="explorar.html?tipo=Hotel">Hoteles</a><a href="index.html#como-funciona">Cómo funciona</a><a href="registrar.html" class="reg">Registrar mi establecimiento</a></nav></div></header>
+<main><section class="hero"><div class="cont"><h1>Encuentra tu próximo lugar favorito</h1>
+<p>Explora cabañas, hoteles y alojamientos. Consulta fotos, precios, servicios y ubicación en un solo lugar.</p>
+<form class="buscador" action="explorar.html" role="search">
+<div><label for="q">Nombre o ubicación</label><input id="q" name="q" placeholder="Ej.: Cabañas Sofía, sector o municipio"></div>
+<div><label for="tipo">Tipo</label><select id="tipo" name="tipo"><option value="">Todos</option><option>Cabaña</option><option>Hotel</option><option>Motel</option></select></div>
+<button class="btn" type="submit">Buscar alojamientos</button></form></div></section>
+<section style="padding-top:150px"><div class="cont"><h2>Establecimientos</h2><p class="sub">Filtra por tipo de alojamiento.</p>
+<div class="cats" id="cats" role="group" aria-label="Tipo de establecimiento"></div>
+<div class="grid" id="lista"></div>
+<p style="margin-top:22px"><a class="btn sec" href="explorar.html">Ver todo el directorio</a></p></div></section>
+<section style="background:var(--suave)" id="como-funciona"><div class="cont"><h2>Cómo funciona</h2><p class="sub">Tres pasos, sin registrarte.</p>
+<div class="pasos"><div><b>Explora</b>Busca por nombre, tipo o ubicación.</div><div><b>Compara</b>Revisa fotos, servicios y tarifas de cada ficha.</div><div><b>Contacta</b>Llama o escribe por WhatsApp directamente al establecimiento.</div></div>
+<p class="aviso" style="margin-top:22px">La disponibilidad en tiempo real solo se muestra cuando el establecimiento mantiene su calendario actualizado. Mientras tanto, consúltala por teléfono o WhatsApp.</p></div></section></main>
+<footer><div class="cont"><p><b>CabañasYa</b> · Tu lugar ideal, a solo un clic.</p>
+<p>La información de cada establecimiento la proporciona su propietario. Confirma tarifas y disponibilidad directamente con el alojamiento.</p></div></footer>
+<script src="datos.js"></script><script src="app.js"></script><script>
+let tipo="";
+const tipos=["Todos","Cabaña","Hotel"];
+function cats(){$("#cats").innerHTML=tipos.map(t=>`<button aria-pressed="${(t==="Todos"?"":t)===tipo}" data-t="${t}">${t==="Todos"?"Todos":t+"s"}</button>`).join("")}
+window.refrescar=()=>{cats();pintar("#lista",ESTABLECIMIENTOS.filter(e=>!tipo||e.tipo===tipo))};
+$("#cats").addEventListener("click",ev=>{const b=ev.target.closest("[data-t]");if(!b)return;tipo=b.dataset.t==="Todos"?"":b.dataset.t;refrescar()});
+refrescar();
+</script></body></html>
